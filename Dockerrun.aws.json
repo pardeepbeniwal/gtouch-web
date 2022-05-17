@@ -1,0 +1,11 @@
+{
+	"AWSEBDockerrunVersion": "1",
+	"Image": {
+		"Name": "pardeepbeniwal/gtouch_django:latest",
+		"Update": "true"
+	},
+	"Ports": [{
+		"ContainerPort": "8000"
+	}],
+	"Logging": "/var/log/nginx"
+}
