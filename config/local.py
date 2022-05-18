@@ -16,8 +16,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "postgres",
         "USER": "postgres",
-        "PASSWORD": "4k;(*o*Jw;)S",
-        "HOST": "gtouchdb.ctd1uaup1ns8.ap-south-1.rds.amazonaws.com",
+        "PASSWORD": "a7sd6f576dfadfa",
+        "HOST": "gtouchdb.ctdd1uaup1ns8.ap-south-1.rds.amazonaws.com",
         "PORT": 5432,
     }
 }
