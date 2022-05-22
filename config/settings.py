@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'django_s3_storage',
     'home',
     'account',
@@ -147,6 +148,7 @@ AWS_S3_BUCKET_NAME_STATIC = os.environ.get(
 AWS_S3_KEY_PREFIX_STATIC = os.environ.get("AWS_S3_KEY_PREFIX_STATIC")
 
 STATIC_URL = f"https://{AWS_S3_BUCKET_NAME_STATIC}.s3.us-east-2.amazonaws.com/{AWS_S3_KEY_PREFIX_STATIC}/"
+STATIC_URL_TEMP = f"https://{AWS_S3_BUCKET_NAME_STATIC}.s3.amazonaws.com/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

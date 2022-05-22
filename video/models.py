@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-
+from .utils import get_video_duration, get_thumbnail
+from django.db.models import signals
+from django.dispatch import receiver
 
 class TimestampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,8 +43,9 @@ class VideoModel(TimestampMixin):
 
     class Meta:
         verbose_name_plural = "Video"
+        verbose_name = "Video"
 
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, db_constraint=False)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, db_constraint=False, related_name='category')
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     video_file = models.FileField(upload_to='video_files/',blank=True, validators=[FileExtensionValidator(allowed_extensions=video_file_ext)])
@@ -53,3 +56,14 @@ class VideoModel(TimestampMixin):
 
     def __str__(self):
         return f"{self.title}"
+    
+    def save(self, *args, **kwargs):
+        super(VideoModel, self).save(*args, **kwargs)
+    
+
+@receiver(signals.post_save, sender=VideoModel)
+def video_modify(sender, instance, created, **kwargs):
+    if created:
+        instance.duration = get_video_duration(instance.video_file)
+        instance.thumbnail = get_thumbnail(instance.video_file)        
+        instance.save()
