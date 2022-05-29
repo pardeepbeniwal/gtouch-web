@@ -16,7 +16,7 @@ class DelType(models.IntegerChoices):
     DELETED = 1, "DELETED"
 
 class VideoTypes(models.IntegerChoices):
-    NORMAL = 1, "NORAMAL"
+    NORMAL = 1, "NORMAL"
     SERIES = 2, "SERIES"
 
 class TimestampMixin(models.Model):

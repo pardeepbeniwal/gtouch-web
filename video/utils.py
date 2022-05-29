@@ -26,9 +26,11 @@ def get_video_duration(path):
         p1 = subprocess.Popen(['ffmpeg',  '-i', input_video], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p2 = subprocess.Popen(["grep",  "-o", "-P", "(?<=Duration: ).*?(?=,)"], stdin=p1.stdout, stdout=subprocess.PIPE)
         p1.stdout.close()
-        return time_to_second(str(p2.communicate()[0].decode("utf-8").strip()))
+        vtime = str(p2.communicate()[0].decode("utf-8").strip())
+        return time_to_second(vtime)
     except Exception as e:
         print('error in get_video_duration', str(e))
+    return 10
 
 def get_thumbnail(path):
     in_filename = path.url
@@ -56,6 +58,7 @@ def get_thumbnail(path):
 
 
 def time_to_second(time_string):
+    time_string = time_string.split('.')[0]
     date_time = datetime. datetime. strptime(time_string, "%H:%M:%S")
     a_timedelta = date_time - datetime. datetime(1900, 1, 1)
     return int(a_timedelta. total_seconds())
