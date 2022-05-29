@@ -9,7 +9,12 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from utils.email_functions import send_email
 from django.conf import settings
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
 import uuid
+
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
@@ -56,37 +61,60 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ForgotPasswordView(generics.UpdateAPIView):
-    """
-    An endpoint for forgot password.
-    """
-    serializer_class = ForgotPasswordSerializer
-    model = User
-    permission_classes = (AllowAny,)    
+# class ForgotPasswordView(generics.UpdateAPIView):
+#     """
+#     An endpoint for forgot password.
+#     """
+#     serializer_class = ForgotPasswordSerializer
+#     model = User
+#     permission_classes = (AllowAny,)    
 
-    def update(self, request, *args, **kwargs):        
-        serializer = self.get_serializer(data=request.data)
+#     def update(self, request, *args, **kwargs):        
+#         serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
-            email = serializer.data.get("email")
-            user = User.objects.filter(email=email).first()
-            if not user:
-                return Response({"message": "User does not exists with this email."}, status=status.HTTP_400_BAD_REQUEST)
-            # token = str(uuid.uuid4())
-            # user.token = 1
-            # user.save()
-            # body = "Hi {first_name}, \n \n <a href=\"{site_url}auth/reset-password/{token}\">Click here</a> to reset password.".format(site_url=settings.SITE_URL,first_name=user.first_name, token=token)
-            # send_email('Gtouch Reset Password',body,email)
-            response = {
-                'status': status.HTTP_200_OK,
-                'message': "Please use this url for reset password: {}accounts/password_reset/".format(settings.SITE_URL)               
-            }
+#         if serializer.is_valid():
+#             email = serializer.data.get("email")
+#             user = User.objects.filter(email=email).first()
+#             if not user:
+#                 return Response({"message": "User does not exists with this email."}, status=status.HTTP_400_BAD_REQUEST)
+#             # token = str(uuid.uuid4())
+#             # user.token = 1
+#             # user.save()
+#             # body = "Hi {first_name}, \n \n <a href=\"{site_url}auth/reset-password/{token}\">Click here</a> to reset password.".format(site_url=settings.SITE_URL,first_name=user.first_name, token=token)
+#             # send_email('Gtouch Reset Password',body,email)
+#             response = {
+#                 'status': status.HTTP_200_OK,
+#                 'message': "Please use this url for reset password: {}accounts/password_reset/".format(settings.SITE_URL)               
+#             }
 
-            return Response(response)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             return Response(response)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ResetPasswordView():
-    pass
+
+class ResetPasswordView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        data = request.data
+        if data.get("email"):
+            user = User.objects.filter(email=data.get('email')).first()
+            if user:
+                subject = "Gtouch Password Reset Requested"
+                uid =  urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                body = "You're receiving this email because you requested a password reset for your user account at {site_url}.<br/><br/></br/>\
+                        Please go to the following page and choose a new password:<br/><br/>\
+                        {site_url}accounts/reset/{uid}/{token}/".format(site_url=settings.SITE_URL,uid=uid,token=token)
+                send_email(subject,body,user.email)
+                message = "We’ve emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly.\
+                            If you don’t receive an email, please make sure you’ve entered the address you registered with, and check your spam folder."
+                return Response({'message': message}, status=status.HTTP_200_OK)
+            else:
+                return Response({'email': 'User email does not exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'email': 'User email field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ExampleView(APIView):
     permission_classes = [IsAuthenticated]
 

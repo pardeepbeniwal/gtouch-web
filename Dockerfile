@@ -2,6 +2,8 @@ FROM python:3.8
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
 ENV PYTHONUNBUFFERED 1
+RUN apt-get -y update && apt-get install -y apt-transport-https
+RUN apt-get -y install ffmpeg
 # create root directory for our project in the container
 RUN mkdir /gtouch
 # Set the working directory to /music_service

@@ -6,10 +6,9 @@ import io
 from django.conf import settings
 import string
 import random
-import requests 
 import ffmpeg
 import sys
-
+import datetime
 MAX_SIZE_FULL = 600
 MAX_SIZE_FLOOR = 731
 MAX_SIZE_THUMB = 50
@@ -27,7 +26,7 @@ def get_video_duration(path):
         p1 = subprocess.Popen(['ffmpeg',  '-i', input_video], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p2 = subprocess.Popen(["grep",  "-o", "-P", "(?<=Duration: ).*?(?=,)"], stdin=p1.stdout, stdout=subprocess.PIPE)
         p1.stdout.close()
-        return p2.communicate()[0].decode("utf-8").strip()
+        return time_to_second(str(p2.communicate()[0].decode("utf-8").strip()))
     except Exception as e:
         print('error in get_video_duration', str(e))
 
@@ -48,12 +47,18 @@ def get_thumbnail(path):
         )
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name='ap-south-1')   
-        client.upload_file(out_filename, 'gtouch-static', 'static/'+out_filename)
-        return 'static/'+out_filename
+        client.upload_file(out_filename, 'gtouch-static', 'static/video_thumbnail/'+out_filename)
+        return 'static/video_thumbnail/'+out_filename
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
         sys.exit(1)
 
+
+
+def time_to_second(time_string):
+    date_time = datetime. datetime. strptime(time_string, "%H:%M:%S")
+    a_timedelta = date_time - datetime. datetime(1900, 1, 1)
+    return int(a_timedelta. total_seconds())
 
 def create_thumb(image_path):
     original_image = Image.open(

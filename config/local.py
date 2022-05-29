@@ -16,8 +16,56 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "postgres",
         "USER": "postgres",
-        "PASSWORD": "a7sd6f576dfadfa",
-        "HOST": "gtouchdb.ctdd1uaup1ns8.ap-south-1.rds.amazonaws.com",
+        "PASSWORD": "4k;(*o*Jw;)S",
+        "HOST": "gtouchdb.ctd1uaup1ns8.ap-south-1.rds.amazonaws.com",
         "PORT": 5432,
     }
+}
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'abramkhan80@gmail.com'
+EMAIL_HOST_PASSWORD = 'abram@123'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SITE_URL = "http://localhost:8080/"
+#AWS
+AWS_REGION = 'ap-south-1'
+AWS_ACCESS_KEY_ID = 'AKIAQSMC7KMR4P7XJL3L'
+AWS_SECRET_ACCESS_KEY = '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'
+
+###
+# Files
+########
+DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
+
+AWS_S3_BUCKET_NAME = 'gtouch-static'
+AWS_S3_BUCKET_NAME_STATIC = 'gtouch-static'
+AWS_S3_KEY_PREFIX_STATIC = 'static'
+
+STATIC_URL = f"https://{AWS_S3_BUCKET_NAME_STATIC}.s3.us-east-2.amazonaws.com/{AWS_S3_KEY_PREFIX_STATIC}/"
+STATIC_URL_TEMP = f"https://{AWS_S3_BUCKET_NAME_STATIC}.s3.amazonaws.com/"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1115),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "JTI_CLAIM": "jti",
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=15),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }

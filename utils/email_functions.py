@@ -2,7 +2,6 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 def send_email(subject,body,to):
-    print(subject,body,to)
     email = EmailMessage(
         subject,
         body,
@@ -10,4 +9,4 @@ def send_email(subject,body,to):
         [to]
     )
     email.content_subtype = 'html'
-    print(email.send())
+    email.send()

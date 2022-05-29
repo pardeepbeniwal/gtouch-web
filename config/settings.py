@@ -203,3 +203,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_URL = "http://gtouch-env-1.eba-2bpkmk36.ap-south-1.elasticbeanstalk.com/"
+STATIC_PATH_URL = "https://gtouch-static.s3.amazonaws.com/"
+TIME_ZONE =  'Asia/Kolkata'
