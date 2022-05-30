@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from video.models import Category, Video, FavoritVideo, UserHistory
-from video.api.serializers import CategorySerializer, HomePageSerializer, VideoSerializer, FavoritVideoSerializer
+from video.models import Category, Video, FavoritVideo, UserHistory, Live
+from video.api.serializers import CategorySerializer, HomePageSerializer, VideoSerializer, FavoritVideoSerializer, LiveSerializer
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from video.api.filters import VideoFilter
@@ -128,3 +128,10 @@ class FavoritVideoViewSet(mixins.CreateModelMixin,
         except Http404:
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class LiveViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = LiveSerializer
+    queryset = Live.objects.all().order_by('-id')
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (OrderingFilter, DjangoFilterBackend, SearchFilter)
+    search_fields = ['title']

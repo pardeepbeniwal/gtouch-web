@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from video.models import Category, Video, FavoritVideo, UserHistory
+from video.models import Category, Video, FavoritVideo, UserHistory,Live
 from django.conf import settings
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -49,3 +49,14 @@ class HomePageSerializer(serializers.ModelSerializer):
     def get_thubmbnail(self, obj):
         if obj.thumbnail:
             return settings.STATIC_URL_TEMP+obj.thumbnail
+
+class LiveSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Live
+        fields = ("id", "thumbnail", "url", "title")
+    
+    def get_thumbnail(self, obj):
+        if obj.thumbnail:
+            return obj.thumbnail.url
