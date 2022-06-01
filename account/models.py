@@ -1,6 +1,8 @@
 from statistics import mode
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.db import models
+from django.utils import timezone
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email,  password=None, is_admin=False, is_staff=False, is_active=True):
@@ -41,9 +43,14 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractUser):
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
-    USERNAME_FIELD = 'email'
+    email = models.EmailField(verbose_name='email address', max_length=255, blank=True, null=True)
+    USERNAME_FIELD = 'mobile_number'
     REQUIRED_FIELDS = []
+    mobile_number = models.BigIntegerField(max_length=12, unique=True)
+    passcode = models.CharField(blank=True, null=True,max_length=10)
+    status = models.IntegerField(default=0)
+    device = models.CharField(blank=True, null=True,max_length=255)
+    device_id = models.CharField(blank=True, null=True,max_length=255)
 
     objects = UserManager()
 
@@ -52,3 +59,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+
+   

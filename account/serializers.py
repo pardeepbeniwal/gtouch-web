@@ -73,3 +73,35 @@ class ForgotPasswordSerializer(serializers.Serializer):
     """
     email = serializers.EmailField(required=True)
 
+def validate_required(value):
+        # whatever validation logic you need
+        if value == '' or value is None:
+            raise serializers.ValidationError('This field is required.')
+        
+class MobileRegisterSerializer(serializers.ModelSerializer):
+    mobile_number = serializers.IntegerField(
+            required=True,
+            validators=[UniqueValidator(queryset=User.objects.all())])
+
+    class Meta:
+        model = User
+        fields = ('mobile_number', 'device', 'device_id' )
+        extra_kwargs = {
+            'mobile_number': {'required': True},
+            'device': {'required': True}
+        }
+    
+   
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )        
+        user.set_password(validated_data['password'])
+        user.save()
+        body = "Hi {first_name}, <br><br> You have registered successfully with Gtouch.".format(first_name=user.first_name)
+        send_email('Gtouch User Registration',body,user.email)
+        return user

@@ -1,9 +1,38 @@
 from django.urls import path
 from account.views import (
     MyObtainTokenPairView, RegisterView,ChangePasswordView,
-    ResetPasswordView,ExampleView
+    ResetPasswordView,ExampleView, MobileRegisterView,MobileLoginView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
+
+from rest_framework.views import exception_handler
+from http import HTTPStatus
+def api_exception_handler(exc, context):
+    """Custom API exception handler."""
+
+    # Call REST framework's default exception handler first,
+    # to get the standard error response.
+    response = exception_handler(exc, context)
+
+    if response is not None:
+        # Using the description's of the HTTPStatus class as error message.
+        http_code_to_message = {v.value: v.description for v in HTTPStatus}
+
+        error_payload = {
+            "error": {
+                "status_code": 0,
+                "message": "",
+                "details": [],
+            }
+        }
+        error = error_payload["error"]
+        status_code = response.status_code
+
+        error["status_code"] = status_code
+        error["message"] = http_code_to_message[status_code]
+        error["details"] = response.data
+        response.data = error_payload
+    return response
 
 
 urlpatterns = [
@@ -12,6 +41,8 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     #path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
-    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),   
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('mobile_register/', MobileRegisterView.as_view(), name='auth_register'),
+    path('mobile_login/', MobileLoginView.as_view(), name='mobile_login'),
     path('test/', ExampleView.as_view(), name='ExampleView'),
 ]
