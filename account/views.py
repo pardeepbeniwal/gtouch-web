@@ -152,7 +152,7 @@ class MobileRegisterView(generics.CreateAPIView):
         except Exception as e:
             User.objects.create(passcode=otp,device=data.get('device'),mobile_number=data.get('mobile_number'))
         mobile_number = '91'+str(data.get('mobile_number'))
-        url = "https://api.taggteleservices.com/api/v2/SendSMS?SenderId=GINRXP&Is_Unicode=false&Is_Flash=false&Message=%22Dear%20Customer%2C%20Your%20OTP%20for%20registration%20is%20{}.%20Use%20this%20OTP%20to%20complete%20your%20registration.%20Thank%20You.%5CnRegards%2C%5CnGTOUCH%22&MobileNumbers={}&ApiKey=tEdQKm5TUIUgsjERx2hj8OYqC%2FfjjzeQLbkKCNCGA3w%3D&ClientId=7aceda54-a70b-497c-8284-e78242de9b7d".format(otp,mobile_number)
+        url = settings.SMS_API_URL+"&Is_Unicode=false&Is_Flash=false&Message=%22Dear%20Customer%2C%20Your%20OTP%20for%20registration%20is%20{}.%20Use%20this%20OTP%20to%20complete%20your%20registration.%20Thank%20You.%5CnRegards%2C%5CnGTOUCH%22&MobileNumbers={}&ApiKey=tEdQKm5TUIUgsjERx2hj8OYqC%2FfjjzeQLbkKCNCGA3w%3D&ClientId={}".format(otp,mobile_number,settings.SMS_CLIENT_ID)
         requests.get(url)
         return Response({"message":"Your One Time Password has been sent on your mobile."}, status=status.HTTP_400_BAD_REQUEST)
 
