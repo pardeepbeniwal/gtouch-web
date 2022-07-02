@@ -14,3 +14,6 @@ django-s3-storage==0.13.6
 ffmpeg==1.4
 ffmpeg-python==0.2.0
 pillow==2.2.1
+requests==2.26.0
+fcm-django==1.0.12
+firebase-admin==5.2.0

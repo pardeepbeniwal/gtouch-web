@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from utils.email_functions import send_email
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = User.EMAIL_FIELD
 
@@ -105,3 +106,20 @@ class MobileRegisterSerializer(serializers.ModelSerializer):
         body = "Hi {first_name}, <br><br> You have registered successfully with Gtouch.".format(first_name=user.first_name)
         send_email('Gtouch User Registration',body,user.email)
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(allow_blank=True, allow_null=True)
+
+    class Meta:
+        model = User
+        exclude = ('password','groups','user_permissions','passcode','last_login','is_superuser')
+        read_only_fields = ('username','mobile_number',)
+    
+    def update(self, instance, validated_data): 
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.dob = validated_data.get('dob', instance.dob)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.save()
+        return instance

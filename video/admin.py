@@ -21,14 +21,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class HomePageAdmin(admin.ModelAdmin):
-    exclude = ('duration', 'thumbnail', 'is_delete','created_at')
+    exclude = ('duration', 'is_delete','created_at')
     list_display = ('title', 'category', 'description','img_thumbnail', 'duration','sections', 'status',)
+    #form = HomePageForm
 
     def img_thumbnail(self, obj):
-        if obj.thumbnail:
+        if obj.v_thumbnail:
             return mark_safe(
-                    '<img src="https://gtouch-static.s3.amazonaws.com/%s" style="max-width:250px;max-height:250px"/>'
-                    % (obj.thumbnail)
+                    '<img src="https://gtouch.s3.amazonaws.com/%s" style="max-width:250px;max-height:250px"/>'
+                    % (obj.v_thumbnail)
             )
     img_thumbnail.allow_tags = True
     img_thumbnail.short_description = "Image"
@@ -47,7 +48,7 @@ class LiveAdmin(admin.ModelAdmin):
     def img_thumbnail(self, obj):
         if obj.thumbnail:
             return mark_safe(
-                    '<img src="https://gtouch-static.s3.amazonaws.com/%s" style="max-width:250px;max-height:250px"/>'
+                    '<img src="https://gtouch.s3.amazonaws.com/%s" style="max-width:250px;max-height:250px"/>'
                     % (obj.thumbnail)
             )
     img_thumbnail.allow_tags = True

@@ -77,6 +77,7 @@ class Live(CommonInfo):
 
 class Video(TimestampMixin):
     video_file_ext = ['WEBM','MPG','MP2','MPEG','MPE','MPV','OGG','MP4','M4P','M4V','AVI','WMV','MOV','QT','FLV','SWF']
+    image_file_ext = ['bmp', 'jpe', 'jpg', 'jpeg', 'tif', 'gif', 'ppm', 'xbm', 'tiff', 'rgb', 'pgm', 'png', 'pnm']
 
     class Meta:
         verbose_name_plural = "Video"
@@ -88,7 +89,8 @@ class Video(TimestampMixin):
     description = models.TextField(null=True, blank=True)
     video_file = models.FileField(upload_to='video_files/',blank=False, validators=[FileExtensionValidator(allowed_extensions=video_file_ext)])
     duration = models.CharField(max_length=255, null=True, blank=True)
-    thumbnail = models.CharField(max_length=255, null=True, blank=True)
+    v_thumbnail = models.ImageField(upload_to='static/video_thumbnail/',verbose_name="Vertical Thumbnail", blank=False, validators=[FileExtensionValidator(allowed_extensions=image_file_ext)])
+    h_thumbnail = models.ImageField(upload_to='static/video_thumbnail/',verbose_name="Horizontal Thumbnail", blank=False, validators=[FileExtensionValidator(allowed_extensions=image_file_ext)])
     is_delete = models.IntegerField(choices=DelType.choices, default=0)
     status = models.IntegerField(choices=Status.choices, default=1)
     cast_details = models.TextField(null=True,blank=True)
@@ -98,15 +100,25 @@ class Video(TimestampMixin):
     def __str__(self):
         return f"{self.title}"
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-    
+    # def save(self, *args, **kwargs):
+    #     #check if obj is new or being updated
+    #     try:
+    #         obj = HomePage.objects.get(pk=self.pk)
+    #         if not obj.title == self.title:  # Field has changed
+    #             print("OJOJOJO")
+    #     except django.core.exceptions.ObjectDoesNotExist:
+    #         pass
+    #     #call super and store data
+    #     super(Video, self).save(*args, **kwargs)
+
+
     def sections(self):
         return "\n".join([p.name for p in self.section.all()])
 
 class HomePage(Video):
     class Meta:
         proxy = True
+
 
 class FavoritVideo(TimestampMixin):
     class Meta:
@@ -135,5 +147,12 @@ class UserHistory(TimestampMixin):
 def video_modify(sender, instance, created, **kwargs):
     if created:
         instance.duration = get_video_duration(instance.video_file)
-        instance.thumbnail = get_thumbnail(instance.video_file)
+        #instance.thumbnail = get_thumbnail(instance.video_file)
         instance.save()
+    else:
+        vobj = Video.objects.get(id=instance.id)
+        vobj.duration = get_video_duration(instance.video_file)
+        #vobj.thumbnail = get_thumbnail(instance.video_file)
+        vobj.save()
+
+

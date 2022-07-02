@@ -1,0 +1,113 @@
+<!-- Login modal -->
+
+  <!-- The Modal -->
+  <div class="modal" id="loginmodal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Login</h4>
+          <button type="button" class="btn-transparent dialog-close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark text-light"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+        <div class="modal-body">
+          <form>
+            <div>
+              <label for="phnumber" class="form-label">Please enter your mobile number to login</label>
+              <input type="number" class="form-control" id="phnumber" placeholder="Mobile Number" name="phnumber">
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary submit-btn">Continue</button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Login modal -->
+
+  <!-- OTP modal -->
+
+  <!-- The Modal -->
+  <div class="modal" id="otpmodal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">OTP Verification</h4>
+          <button type="button" class="btn-transparent dialog-close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark text-light"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+        <div class="modal-body">
+          <form>
+            <div>
+              <label for="otp" class="form-label">Please enter the OTP sent to <span>9876543210</span></label>
+              <input type="number" class="form-control" id="otp" placeholder="Enter 4 Digit OTP" name="otp">
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary submit-btn">Verify</button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Login modal -->
+
+  <script>
+    var owl = $('.owl-carousel.index-carousel');
+    owl.owlCarousel({
+      center: true,
+      loop: true,
+      responsive: {
+        0: {
+          items: 1
+        },
+        600: {
+          items: 1
+        },
+        1000: {
+          items:1
+        }
+      }
+    })
+
+    var owl = $('.owl-carousel');
+    owl.owlCarousel({
+      margin: 30,
+      loop: false,
+      responsive: {
+        0: {
+          items: 2
+        },
+        767: {
+          items: 2
+        },
+        600: {
+          items: 2
+        },
+        1000: {
+          items: 8
+        }
+      }
+    })
+
+
+  </script>
+</body>
+
+</html>

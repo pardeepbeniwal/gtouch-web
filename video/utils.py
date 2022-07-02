@@ -49,7 +49,7 @@ def get_thumbnail(path):
         )
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name='ap-south-1')   
-        client.upload_file(out_filename, 'gtouch-static', 'static/video_thumbnail/'+out_filename)
+        client.upload_file(out_filename, 'gtouch', 'static/video_thumbnail/'+out_filename)
         return 'static/video_thumbnail/'+out_filename
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
@@ -61,7 +61,10 @@ def time_to_second(time_string):
     time_string = time_string.split('.')[0]
     date_time = datetime. datetime. strptime(time_string, "%H:%M:%S")
     a_timedelta = date_time - datetime. datetime(1900, 1, 1)
-    return int(a_timedelta. total_seconds())
+    if int(a_timedelta. total_seconds()) > 0:
+        return int(a_timedelta. total_seconds())*1000
+    else:
+        return 0
 
 def create_thumb(image_path):
     original_image = Image.open(
